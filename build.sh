@@ -1,6 +1,6 @@
 #!/bin/bash
 
-APP_NAME=redis-interval-work-queue
+APP_NAME=circularqueue
 TMP_DIR=/tmp/$APP_NAME/
 IMAGE_NAME=local/$APP_NAME
 
@@ -11,17 +11,6 @@ init() {
 
 build() {
   docker build -t $IMAGE_NAME .
-}
-
-run() {
-  docker run --rm \
-    --volume $TMP_DIR:/export/ \
-    $IMAGE_NAME \
-      cp /go/$APP_NAME /export
-}
-
-copy() {
-  cp $TMP_DIR/$APP_NAME .
 }
 
 panic() {

@@ -10,6 +10,4 @@ RUN gpm install
 
 COPY . /go/
 
-VOLUME /export/
-
 RUN go test
