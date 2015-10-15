@@ -4,11 +4,6 @@ import (
 	"github.com/garyburd/redigo/redis"
 )
 
-// Job represents a job in the queue
-type Job interface {
-  GetKey() string
-}
-
 // Queue represents the underlying job queue
 type Queue struct {
 

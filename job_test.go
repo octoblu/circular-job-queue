@@ -7,7 +7,7 @@ import (
 	. "github.com/onsi/gomega"
 )
 
-var _ = Describe("Redisjob", func() {
+var _ = Describe("Job", func() {
 	Context("New with a key", func() {
 		var sut circularqueue.Job
 
@@ -19,5 +19,4 @@ var _ = Describe("Redisjob", func() {
 			Expect(sut.GetKey()).To(Equal("old-map"))
 		})
 	})
-
 })
