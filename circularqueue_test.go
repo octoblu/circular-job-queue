@@ -9,9 +9,23 @@ import (
 )
 
 var _ = Describe("circularqueue", func() {
+	var redisConn redis.Conn
+	var result interface{}
+	var sut circularqueue.Queue
+
+	BeforeEach(func(){
+		var err error
+		redisConn, err = redis.Dial("tcp", ":6379")
+		Expect(err).To(BeNil())
+	})
+
+	AfterEach(func(){
+		redisConn.Close()
+	})
+
 	Context("Pop", func() {
 		It("should have a Pop", func() {
-			sut := circularqueue.New()
+			sut := circularqueue.New(redisConn)
 
 			job, err := sut.Pop()
 			Expect(err).To(BeNil())
@@ -19,15 +33,8 @@ var _ = Describe("circularqueue", func() {
 		})
 
 		Context("When there are two records in redis", func() {
-			var redisConn redis.Conn
-			var result interface{}
-			var sut circularqueue.Queue
-
 			BeforeEach(func(){
 				var err error
-
-				redisConn, err = redis.Dial("tcp", ":6379")
-				Expect(err).To(BeNil())
 
 				_, err = redisConn.Do("DEL", "circular-job-queue")
 				Expect(err).To(BeNil())
@@ -35,13 +42,9 @@ var _ = Describe("circularqueue", func() {
 				_, err = redisConn.Do("RPUSH", "circular-job-queue", "A", "B")
 				Expect(err).To(BeNil())
 
-				sut = circularqueue.New()
+				sut = circularqueue.New(redisConn)
 				result, err = sut.Pop()
 				Expect(err).To(BeNil())
-			})
-
-			AfterEach(func(){
-				redisConn.Close()
 			})
 
 			It("should move the last record to the first record", func(){
