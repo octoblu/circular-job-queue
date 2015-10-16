@@ -22,7 +22,7 @@ func New(conn Conn) (*ConnQueue) {
 
 // Pop returns a job from the queue and auto-readds it
 func (queue *ConnQueue) Pop() (Job,error) {
-  result, err := queue.conn.Do("RPOPLPUSH", "circular-job-queue", "circular-job-queue")
+  result, err := queue.conn.Do("BRPOPLPUSH", "circular-job-queue", "circular-job-queue", 1000)
   if err != nil {
     return nil, err
   }
